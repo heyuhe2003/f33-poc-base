@@ -1,0 +1,1 @@
+F3-3 hosted PoC base repo: victim workflows using actions/checkout pinned to the audited snapshot (f548e57) with the dangerous `ref: ${{ github.event.pull_request.head.ref }}` mapping (bare ref, no repository input).

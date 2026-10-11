@@ -1,0 +1,9 @@
+name: pr-checks
+on:
+  pull_request:
+    types: [opened, synchronize]
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "pr-checks on head sha $(git rev-parse HEAD)"

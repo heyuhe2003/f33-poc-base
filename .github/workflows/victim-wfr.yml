@@ -1,0 +1,22 @@
+name: victim-wfr
+on:
+  workflow_run:
+    workflows: ["pr-checks"]
+    types: [completed]
+jobs:
+  fanin:
+    if: github.event.workflow_run.event == 'pull_request' && github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
+      - name: proof
+        run: |
+          echo "EVENT=workflow_run"
+          echo "HEAD_BRANCH=${{ github.event.workflow_run.head_branch }}"
+          echo "RUN_HEAD_SHA=${{ github.event.workflow_run.head_sha }}"
+          echo "RUN_HEADCOMMIT_ID=${{ github.event.workflow_run.head_commit.id }}"
+          echo "CHECKED_OUT_SHA=$(git rev-parse HEAD)"
+          echo "CHECKED_OUT_TREE=$(git rev-parse HEAD^{tree})"
+          if [ -f attacker-marker.txt ]; then echo "ATTACKER_PAYLOAD_PRESENT(workflow_run): $(cat attacker-marker.txt)"; else echo "NO_MARKER(workflow_run)"; fi

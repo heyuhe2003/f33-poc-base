@@ -1,0 +1,20 @@
+name: victim-prt
+on:
+  pull_request_target:
+    types: [opened, synchronize]
+jobs:
+  victim:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+      - name: proof
+        run: |
+          echo "EVENT=pull_request_target"
+          echo "HEAD_REF_INPUT=${{ github.event.pull_request.head.ref }}"
+          echo "PAYLOAD_HEAD_SHA=${{ github.event.pull_request.head.sha }}"
+          echo "MERGE_COMMIT_SHA=${{ github.event.pull_request.merge_commit_sha }}"
+          echo "CHECKED_OUT_SHA=$(git rev-parse HEAD)"
+          echo "CHECKED_OUT_TREE=$(git rev-parse HEAD^{tree})"
+          if [ -f attacker-marker.txt ]; then echo "ATTACKER_PAYLOAD_PRESENT: $(cat attacker-marker.txt)"; else echo "NO_MARKER (base code checked out)"; fi
